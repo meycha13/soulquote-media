@@ -1,0 +1,41 @@
+name: Render Soulquote images
+on:
+  push:
+    paths:
+      - 'source/*.svg'
+      - '.github/workflows/render.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install cairosvg pillow
+      - name: Render JPEG carousel
+        run: |
+          mkdir -p public
+          python - <<'PY'
+          import glob, io, os
+          import cairosvg
+          from PIL import Image
+          for src in sorted(glob.glob('source/*.svg')):
+              png=cairosvg.svg2png(url=src, output_width=1080, output_height=1350)
+              image=Image.open(io.BytesIO(png)).convert('RGB')
+              dest='public/'+os.path.basename(src).replace('.svg','.jpg')
+              image.save(dest,quality=90,optimize=True)
+              print(dest)
+          PY
+      - name: Commit rendered images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/
+          if ! git diff --cached --quiet; then
+            git commit -m "Render carousel JPEGs"
+            git push
+          fi
