@@ -1,0 +1,40 @@
+name: Validate finished AI carousel images
+on:
+  push:
+    paths:
+      - 'ready/**'
+      - '.github/workflows/ready-images.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pillow
+      - name: Validate all ready carousel sets
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import re, sys
+          base=Path("ready")
+          sets=sorted(p for p in base.iterdir() if p.is_dir()) if base.exists() else []
+          if not sets: print("No carousel sets yet; upload ready/<slug>/01.jpg ... 05.jpg"); sys.exit(0)
+          for folder in sets:
+              images=sorted(p for p in folder.iterdir() if p.suffix.lower() in (".jpg",".jpeg"))
+              expected=[f"{i:02}.jpg" for i in range(1,6)]
+              if [p.name for p in images]!=expected: raise ValueError(f"{folder}: expected {expected}; got {[p.name for p in images]}")
+              for p in images:
+                  with Image.open(p) as im:
+                      im.verify()
+                  with Image.open(p) as im:
+                      if im.size!=(1080,1350): raise ValueError(f"{p}: wrong dimensions {im.size}")
+                      if im.format!="JPEG": raise ValueError(f"{p}: not JPEG")
+                  if p.stat().st_size>8_000_000:raise ValueError(f"{p}: >8MB")
+              print(f"VALIDATED: {folder} 5 images 1080x1350")
+          PY
