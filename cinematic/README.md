@@ -1,0 +1,4 @@
+# Cinematic Science 2.0 — Pilot
+Five 1080x1350 JPEG slides from JSON manifests in `cinematic/`. Images are optional and must be placed in `assets/` with appropriate usage rights and attribution. Set each slide's `image` to a relative path such as `assets/space/neutron-star.jpg`; without it the renderer uses a navy fallback, NOT an invented photorealistic image.
+Run: `python -m pip install pillow && python scripts/render_cinematic.py cinematic/istwirklichso_cinematic_demo.json`.
+A dedicated GitHub Action renders and commits JPGs to `public/`. The old SVG workflow remains untouched. The initial pilot validates the layout/pipeline, not the cinematic photo quality. Check rendered images visually before Metricool scheduling. The scientific claims and rights of added imagery must be reviewed manually.
