@@ -5,6 +5,7 @@ on:
       - 'cinematic/**.json'
       - 'assets/**'
       - 'scripts/render_cinematic.py'
+      - 'scripts/generate_cinematic_art.py'
       - '.github/workflows/cinematic.yml'
   workflow_dispatch:
 permissions:
@@ -23,6 +24,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install pillow
+      - name: Generate original space illustrations
+        run: python scripts/generate_cinematic_art.py
       - name: Render cinematic manifests
         run: |
           for manifest in cinematic/*.json; do
