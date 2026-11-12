@@ -4,27 +4,32 @@
     {
       "tag": "DER WOW-FAKT",
       "title": "Ein Teelöffel. Milliarden Tonnen.",
-      "body": "So extrem dicht ist Materie in einem Neutronenstern."
+      "body": "So extrem dicht ist Materie in einem Neutronenstern.",
+      "image": "assets/generated/neutron_01.jpg"
     },
     {
       "tag": "DIE ENTSTEHUNG",
       "title": "Wenn ein Stern kollabiert",
-      "body": "Der Kern eines massereichen Sterns stürzt unter seiner Schwerkraft zusammen."
+      "body": "Der Kern eines massereichen Sterns stürzt unter seiner Schwerkraft zusammen.",
+      "image": "assets/generated/neutron_02.jpg"
     },
     {
       "tag": "DER VERGLEICH",
       "title": "Klein, aber extrem massereich",
-      "body": "Rund 20 bis 25 Kilometer Durchmesser – und etwa eine Sonnenmasse oder mehr."
+      "body": "Rund 20 bis 25 Kilometer Durchmesser – und etwa eine Sonnenmasse oder mehr.",
+      "image": "assets/generated/neutron_03.jpg"
     },
     {
       "tag": "DIE PHYSIK",
       "title": "Materie unter enormem Druck",
-      "body": "Im Inneren herrschen extreme Bedingungen. Vieles ist noch Gegenstand der Forschung."
+      "body": "Im Inneren herrschen extreme Bedingungen. Vieles ist noch Gegenstand der Forschung.",
+      "image": "assets/generated/neutron_04.jpg"
     },
     {
       "tag": "DAS FAZIT",
       "title": "Ein Vergleich, der bleibt",
-      "body": "Der Teelöffel ist ein Gedankenexperiment – kein wirklich entnehmbares Stück Stern."
+      "body": "Der Teelöffel ist ein Gedankenexperiment – kein wirklich entnehmbares Stück Stern.",
+      "image": "assets/generated/neutron_05.jpg"
     }
   ]
 }
