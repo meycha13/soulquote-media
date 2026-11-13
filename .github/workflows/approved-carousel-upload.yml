@@ -4,7 +4,7 @@ on:
     types: [created]
 permissions:
   contents: read
-  issues: read
+  issues: write
 concurrency:
   group: carousel-approval-${{ github.event.issue.number }}
   cancel-in-progress: false
@@ -17,26 +17,35 @@ jobs:
       contains(github.event.issue.labels.*.name, 'carousel-review')
     runs-on: ubuntu-latest
     steps:
+      - name: Verify review metadata and open status
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          python - <<'PY'
+          import json, os, re, subprocess
+          number=os.environ["ISSUE_NUMBER"]
+          data=json.loads(subprocess.check_output(["gh","issue","view",number,"--repo",os.environ["GH_REPO"],"--json","state,body"],text=True))
+          if data["state"]!="OPEN": raise SystemExit("Review already closed")
+          body=data["body"]
+          slug=re.search(r"^Carousel: ([A-Za-z0-9][A-Za-z0-9_-]{0,79})$",body,re.M)
+          source=re.search(r"^Source: (public|ready)$",body,re.M)
+          commit=re.search(r"^Commit: ([a-f0-9]{40})$",body,re.M)
+          if not all((slug,source,commit)): raise SystemExit("Review metadata incomplete; recreate review")
+          with open(os.environ["GITHUB_ENV"],"a") as f:
+              f.write("CAROUSEL_SLUG="+slug.group(1)+"\n")
+              f.write("CAROUSEL_SOURCE="+source.group(1)+"\n")
+              f.write("REVIEW_SHA="+commit.group(1)+"\n")
+          PY
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.REVIEW_SHA }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - run: python -m pip install pillow
-      - name: Extract reviewed carousel reference
-        env:
-          ISSUE_BODY: ${{ github.event.issue.body }}
-        run: |
-          python - <<'PY'
-          import os, re
-          body=os.environ['ISSUE_BODY']
-          match=re.search(r'^Carousel: ([A-Za-z0-9][A-Za-z0-9_-]{0,79})$', body, re.M)
-          source=re.search(r'^Source: (public|ready)$', body, re.M)
-          if not match or not source:
-              raise SystemExit('Review issue must contain Carousel and Source metadata')
-          with open(os.environ['GITHUB_ENV'],'a') as f:
-              f.write('CAROUSEL_SLUG='+match.group(1)+'\n')
-              f.write('CAROUSEL_SOURCE='+source.group(1)+'\n')
-          PY
       - name: Upload only after owner approval
         env:
           CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
@@ -48,3 +57,10 @@ jobs:
           name: approved-cloudinary-urls
           path: cloudinary-upload-results.json
           retention-days: 30
+      - name: Close approved review after successful upload
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: gh issue close "$ISSUE_NUMBER" --repo "$GH_REPO" --comment "Cloudinary-Upload erfolgreich. Metricool-Veröffentlichung ist noch nicht automatisiert."
