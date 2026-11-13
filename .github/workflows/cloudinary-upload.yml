@@ -3,9 +3,17 @@ on:
   workflow_dispatch:
     inputs:
       carousel_slug:
-        description: 'Folder name inside ready/ (for example neutron-star)'
+        description: 'Carousel filename prefix (public/) or folder name (ready/)'
         required: true
         type: string
+      carousel_source:
+        description: 'Choose public for existing Cinematic Science JPGs or ready for finished uploads'
+        required: true
+        default: public
+        type: choice
+        options:
+          - public
+          - ready
 permissions:
   contents: read
 jobs:
@@ -20,6 +28,7 @@ jobs:
       - name: Validate and upload five finished slides
         env:
           CAROUSEL_SLUG: ${{ inputs.carousel_slug }}
+          CAROUSEL_SOURCE: ${{ inputs.carousel_source }}
           CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
           CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
           CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
