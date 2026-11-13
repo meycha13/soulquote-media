@@ -47,7 +47,7 @@ lines = [
     f"## Bildfreigabe: {slug}", "",
     "Bitte alle fünf Bilder prüfen. Wissenschaftliche Aussagen und Caption müssen",
     "vor der Freigabe ebenfalls redaktionell geprüft werden.", "",
-    f"Carousel: {slug}", f"Source: {source}", "",
+    f"Carousel: {slug}", f"Source: {source}", f"Commit: {sha}", "",
     "### Vorschau (unveränderlicher Commit)", "",
 ]
 for i, p in enumerate(paths, 1):
