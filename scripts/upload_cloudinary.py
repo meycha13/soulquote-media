@@ -18,10 +18,18 @@ def main():
     slug = os.environ["CAROUSEL_SLUG"].strip()
     if not re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_-]{0,79}", slug):
         raise ValueError("Carousel slug must contain only letters, numbers, hyphens and underscores")
-    folder = Path("ready") / slug
-    paths = [folder / f"{i:02}.jpg" for i in range(1, 6)]
-    if not folder.is_dir() or sorted(p.name for p in folder.iterdir() if p.is_file()) != [p.name for p in paths]:
-        raise ValueError(f"Expected exactly ready/{slug}/01.jpg through 05.jpg")
+    source = os.environ.get("CAROUSEL_SOURCE", "public")
+    if source == "ready":
+        folder = Path("ready") / slug
+        paths = [folder / f"{i:02}.jpg" for i in range(1, 6)]
+        if not folder.is_dir() or sorted(p.name for p in folder.iterdir() if p.is_file()) != [p.name for p in paths]:
+            raise ValueError(f"Expected exactly ready/{slug}/01.jpg through 05.jpg")
+    elif source == "public":
+        paths = [Path("public") / f"{slug}_{i:02}.jpg" for i in range(1, 6)]
+        if not all(p.is_file() for p in paths):
+            raise ValueError(f"Expected five images public/{slug}_01.jpg through {slug}_05.jpg")
+    else:
+        raise ValueError("CAROUSEL_SOURCE must be public or ready")
     for path in paths:
         if path.stat().st_size > 8_000_000:
             raise ValueError(f"{path} exceeds 8MB")
