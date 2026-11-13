@@ -40,7 +40,7 @@ if label not in [v["name"] for v in json.loads(existing)]:
 # Do not create a second pending review for the same carousel.
 issues = json.loads(gh("issue", "list", "--repo", repo, "--state", "open",
                        "--label", label, "--limit", "100", "--json", "body"))
-marker = f"Carousel: {slug}\\nSource: {source}"
+marker = f"Carousel: {slug}\nSource: {source}"
 if any(marker in issue["body"] for issue in issues):
     raise SystemExit("A review for this carousel is already open")
 lines = [
@@ -63,5 +63,5 @@ lines.extend([
 ])
 url = gh("issue", "create", "--repo", repo, "--title",
          f"Karussell-Freigabe: {slug}", "--label", label,
-         "--body-file", "-", input_text="\\n".join(lines))
+         "--body-file", "-", input_text="\n".join(lines))
 print("Review created:", url)
