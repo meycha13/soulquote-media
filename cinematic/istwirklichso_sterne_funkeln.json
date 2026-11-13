@@ -1,0 +1,30 @@
+{
+  "slug": "istwirklichso_sterne_funkeln",
+  "slides": [
+    {
+      "tag": "ASTRONOMIE",
+      "title": "WARUM FUNKELN STERNE?",
+      "body": "Das Licht eines Sterns legt einen erstaunlich unruhigen letzten Weg zurück."
+    },
+    {
+      "tag": "ATMOSPHÄRE",
+      "title": "DIE LUFT IST IN BEWEGUNG",
+      "body": "Luftschichten mit unterschiedlicher Temperatur lenken das Sternenlicht ständig leicht ab."
+    },
+    {
+      "tag": "LICHT",
+      "title": "EIN WINZIGER LICHTPUNKT",
+      "body": "Sterne erscheinen selbst im Teleskop meist punktförmig. Die Schwankungen fallen deshalb stark auf."
+    },
+    {
+      "tag": "PLANETEN",
+      "title": "WARUM FUNKELN PLANETEN WENIGER?",
+      "body": "Planeten zeigen eine winzige Scheibe. Lichtschwankungen aus verschiedenen Bereichen gleichen sich teilweise aus."
+    },
+    {
+      "tag": "FAZIT",
+      "title": "DER STERN IST NICHT SCHULD",
+      "body": "Das Funkeln entsteht überwiegend in unserer Atmosphäre – nicht auf dem Stern selbst."
+    }
+  ]
+}
